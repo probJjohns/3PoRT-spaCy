@@ -13,15 +13,16 @@ from typing import (
 
 import numpy as np
 
-from .errors import Errors
-from .morphology import Morphology
-from .tokens import Doc, Span, Token
-from .training import Example
-from .util import SimpleFrozenList, get_lang_class
+import spacy
+from spacy.errors import Errors
+from spacy.morphology import Morphology
+from spacy.tokens import Doc, Span, Token
+from spacy.training import Example
+from spacy.util import SimpleFrozenList, get_lang_class
 
 if TYPE_CHECKING:
     # This lets us add type hints for mypy etc. without causing circular imports
-    from .language import Language  # noqa: F401
+    from spacy.language import Language  # noqa: F401
 
 
 DEFAULT_PIPELINE = ("senter", "tagger", "morphologizer", "parser", "ner", "textcat")
@@ -132,7 +133,7 @@ class Scorer:
             self.nlp = nlp
 
     def score(
-        self, examples: Iterable[Example], *, per_component: bool = False
+        self, examples: Iterable[Example], *, per_component: bool = True
     ) -> Dict[str, Any]:
         """Evaluate a list of Examples.
 
@@ -756,7 +757,6 @@ class Scorer:
                 f"{attr}_las_per_type": None,
             }
 
-
 def get_ner_prf(examples: Iterable[Example], **kwargs) -> Dict[str, Any]:
     """Compute micro-PRF and per-entity PRF scores for a sequence of examples."""
     score_per_type = defaultdict(PRFScore)
@@ -791,6 +791,8 @@ def get_ner_prf(examples: Iterable[Example], **kwargs) -> Dict[str, Any]:
             "ents_p": totals.precision,
             "ents_r": totals.recall,
             "ents_f": totals.fscore,
+            "skill_f": score_per_type.get("SKILL").fscore,
+            "org_f": score_per_type.get("ORG").fscore,
             "ents_per_type": {k: v.to_dict() for k, v in score_per_type.items()},
         }
     else:
@@ -798,6 +800,8 @@ def get_ner_prf(examples: Iterable[Example], **kwargs) -> Dict[str, Any]:
             "ents_p": None,
             "ents_r": None,
             "ents_f": None,
+            "skill_f": None,
+            "org_f": None,
             "ents_per_type": None,
         }
 
