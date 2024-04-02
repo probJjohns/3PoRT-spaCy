@@ -46,7 +46,7 @@ DEFAULT_NER_MODEL = Config().from_str(default_model_config)["model"]
         "incorrect_spans_key": None,
         "scorer": {"@scorers": "spacy.ner_scorer.v1"},
     },
-    default_score_weights={"ents_f": 0.0, "ents_p": 0.0, "ents_r": 0.0, "skill_f": 0.8, "org_f": 0.2, "ents_per_type": None},
+    default_score_weights={"ents_f": 0.5, "ents_p": 0.0, "ents_r": 0.0, "skill_f": 0.4, "org_f": 0.1, "ents_per_type": None},
 
 )
 def make_ner(
@@ -114,7 +114,7 @@ def make_ner(
         "incorrect_spans_key": None,
         "scorer": None,
     },
-    default_score_weights={"ents_f": 0.0, "ents_p": 0.0, "ents_r": 0.0, "skill_f": 0.8, "org_f": 0.2, "ents_per_type": None},
+    default_score_weights={"ents_f": 0.5, "ents_p": 0.0, "ents_r": 0.0, "skill_f": 0.4, "org_f": 0.1, "ents_per_type": None},
 )
 def make_beam_ner(
     nlp: Language,
